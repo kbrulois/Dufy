@@ -4,7 +4,7 @@
 \alias{extractButcherBEC}
 \title{Download GSE140348 and format as SingleCellExperiment}
 \usage{
-extractButcherBEC(local.dir = tempdir())
+extractButcherBEC(local.dir = "~/Desktop/test")
 }
 \arguments{
 \item{local.dir}{A directory where data should be downloaded. Default: tempdir().}

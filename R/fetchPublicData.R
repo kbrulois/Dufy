@@ -11,7 +11,7 @@
 
 
 
-extractButcherBEC <- function(local.dir = tempdir()) {
+extractButcherBEC <- function(local.dir = "~/Desktop/test") {
   dir.create(local.dir)
   setwd(local.dir)
   system("curl -O ftp.ncbi.nlm.nih.gov/geo/series/GSE140nnn/GSE140348/suppl/GSE140348_RAW.tar")
@@ -85,7 +85,7 @@ extractButcherBEC <- function(local.dir = tempdir()) {
   
   SingleCellExperiment::counts(dat.comb) <- NULL
   
-  meta_data <- S4Vectors::DataFrame(data.table::fread("~/Desktop/ButcherBEC/GSE140348_cell_meta_data.csv.gz"))
+  meta_data <- S4Vectors::DataFrame(data.table::fread(paste0(local.dir, "/GSE140348_cell_meta_data.csv.gz")))
   unlink(local.dir, recursive = TRUE)
   meta_data <- S4Vectors::DataFrame(meta_data, sizeFactor = SingleCellExperiment::colData(dat.comb)[["sizeFactor"]], row.names = meta_data$barcodes)
   SummarizedExperiment::colData(dat.comb) <- meta_data
