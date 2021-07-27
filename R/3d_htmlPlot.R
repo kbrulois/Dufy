@@ -311,7 +311,7 @@ html_3dPlot <- function(coordinates = NULL,
     )
   )
   
-  htmlwidgets::saveWidget(widget, file = paste0(out_dir, "/", file_name, ".html"), title = file_name)
+  htmlwidgets::saveWidget(widget, file = normalizePath(paste0(out_dir, "/", file_name, ".html")), title = file_name)
   
   }
   
