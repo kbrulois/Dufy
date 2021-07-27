@@ -200,7 +200,7 @@ html_3dPlot <- function(coordinates = NULL,
       arrows_sub <- arrows
     }
     for(y in 1:nrow(arrows_sub)) {
-    cones[[paste0(x,"_", y)]] <- cone3d(base = unname(unlist(arrows_sub[y,1:3])), tip = unname(unlist(arrows_sub[y,4:6])), rad = 0.2,
+    cones[[paste0(x,"_", y)]] <- Dufy:::cone3d(base = unname(unlist(arrows_sub[y,1:3])), tip = unname(unlist(arrows_sub[y,4:6])), rad = 0.2,
                  color = if(is.null(arrows_sub[["color"]])) {"red"} else {arrows_sub[["color"]][y]})
     
     }
