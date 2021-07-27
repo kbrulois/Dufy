@@ -12,13 +12,13 @@ Imports:
 	gtools,
 	SingleCellExperiment,
 	batchelor,
-	monocle3,
 	Seurat,
         rgl,
 	htmlwidgets
 Suggests:
 	scran,
-	ggplot2
+	ggplot2,
+	monocle3
 Depends: R (>= 3.3.0)
 Encoding: UTF-8
 LazyData: true
