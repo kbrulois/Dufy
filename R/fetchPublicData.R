@@ -14,9 +14,9 @@
 extractButcherBEC <- function(local.dir = tempdir()) {
   dir.create(local.dir)
   setwd(local.dir)
-  system("curl -O ftp.ncbi.nlm.nih.gov/geo/series/GSE140nnn/GSE140348/suppl/GSE140348_RAW.tar")
-  system("curl -O ftp.ncbi.nlm.nih.gov/geo/series/GSE140nnn/GSE140348/suppl/GSE140348_cell_meta_data.csv.gz")
-  system("curl -O ftp.ncbi.nlm.nih.gov/geo/series/GSE140nnn/GSE140348/suppl/GSE140348_features.tsv.gz")
+  system("curl -O https://ftp.ncbi.nlm.nih.gov/geo/series/GSE140nnn/GSE140348/suppl/GSE140348_RAW.tar")
+  system("curl -O https://ftp.ncbi.nlm.nih.gov/geo/series/GSE140nnn/GSE140348/suppl/GSE140348_cell_meta_data.csv.gz")
+  system("curl -O https://ftp.ncbi.nlm.nih.gov/geo/series/GSE140nnn/GSE140348/suppl/GSE140348_features.tsv.gz")
   untar(grep(".tar", list.files(), value = TRUE))
   
   sample_base_names <- c("PLN1", "PLN2", "PLN3")
@@ -114,9 +114,9 @@ extractPLN1 <- function(local.dir = tempdir()) {
   og.dir <- getwd()
   on.exit({setwd(og.dir)})
   setwd(local.dir)
-  system("curl -O ftp.ncbi.nlm.nih.gov/geo/series/GSE140nnn/GSE140348/suppl/GSE140348_RAW.tar")
-  system("curl -O ftp.ncbi.nlm.nih.gov/geo/series/GSE140nnn/GSE140348/suppl/GSE140348_cell_meta_data.csv.gz")
-  system("curl -O ftp.ncbi.nlm.nih.gov/geo/series/GSE140nnn/GSE140348/suppl/GSE140348_features.tsv.gz")
+  system("curl -O https://ftp.ncbi.nlm.nih.gov/geo/series/GSE140nnn/GSE140348/suppl/GSE140348_RAW.tar")
+  system("curl -O https://ftp.ncbi.nlm.nih.gov/geo/series/GSE140nnn/GSE140348/suppl/GSE140348_cell_meta_data.csv.gz")
+  system("curl -O https://ftp.ncbi.nlm.nih.gov/geo/series/GSE140nnn/GSE140348/suppl/GSE140348_features.tsv.gz")
   untar(grep(".tar", list.files(), value = TRUE))
   
   x <- "PLN1"
