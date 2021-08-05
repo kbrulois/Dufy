@@ -11,7 +11,7 @@
 
 
 
-extractButcherBEC <- function(local.dir = "~/Desktop/test") {
+extractButcherBEC <- function(local.dir = tempdir()) {
   dir.create(local.dir)
   setwd(local.dir)
   system("curl -O ftp.ncbi.nlm.nih.gov/geo/series/GSE140nnn/GSE140348/suppl/GSE140348_RAW.tar")
@@ -90,5 +90,74 @@ extractButcherBEC <- function(local.dir = "~/Desktop/test") {
   meta_data <- S4Vectors::DataFrame(meta_data, sizeFactor = SingleCellExperiment::colData(dat.comb)[["sizeFactor"]], row.names = meta_data$barcodes)
   SummarizedExperiment::colData(dat.comb) <- meta_data
   dat.comb
+}
+
+
+
+
+
+
+#' Download a subset of GSE140348 and format as SingleCellExperiment
+#' 
+#' 
+#' @param local.dir A directory where data should be downloaded. Default: tempdir().
+#' @return A \code{SingleCellExperiment}
+#' 
+#' @author Kevin Brulois
+#' @export
+
+
+
+
+extractPLN1 <- function(local.dir = tempdir()) {
+  dir.create(local.dir)
+  og.dir <- getwd()
+  on.exit({setwd(og.dir)})
+  setwd(local.dir)
+  system("curl -O ftp.ncbi.nlm.nih.gov/geo/series/GSE140nnn/GSE140348/suppl/GSE140348_RAW.tar")
+  system("curl -O ftp.ncbi.nlm.nih.gov/geo/series/GSE140nnn/GSE140348/suppl/GSE140348_cell_meta_data.csv.gz")
+  system("curl -O ftp.ncbi.nlm.nih.gov/geo/series/GSE140nnn/GSE140348/suppl/GSE140348_features.tsv.gz")
+  untar(grep(".tar", list.files(), value = TRUE))
+  
+  x <- "PLN1"
+  file.names <- list.files()
+  getFile <- function(samp_name, data_type) {
+    paste0(local.dir, "/", file.names[grepl(paste(samp_name, data_type, sep = "_"), file.names)])}
+    
+    dat <- as(Matrix::readMM(file = getFile(x, "matrix")), "dgCMatrix")
+    feature.names = read.delim(getFile(x, "features"), 
+                               header = FALSE,
+                               stringsAsFactors = FALSE)
+    barcode.names = read.delim(getFile(x, "barcodes"), 
+                               header = FALSE,
+                               stringsAsFactors = FALSE)
+    
+    colnames(dat) = sub("-1", "", barcode.names$V1)
+    colnames(dat) = paste0(colnames(dat), "_", x)
+    rownames(dat) = feature.names$V1
+    
+    sce.temp <- SingleCellExperiment::SingleCellExperiment(assays = list(counts=dat), 
+                                                           rowData = rownames(dat),
+                                                           colData = colnames(dat))
+    clusters <- scran::quickCluster(sce.temp,
+                                    min.size=min(70, ncol(sce.temp)))
+    
+    sce.temp <- scran::computeSumFactors(sce.temp, 
+                                         clusters=clusters, 
+                                         positive = T)
+  
+    sce.temp <- scater::logNormCounts(sce.temp)
+  
+  SingleCellExperiment::counts(sce.temp) <- NULL
+  
+  meta_data <- S4Vectors::DataFrame(data.table::fread(paste0(local.dir, "/GSE140348_cell_meta_data.csv.gz")))
+  unlink(local.dir, recursive = TRUE)
+  color.key <- meta_data[!is.na(meta_data[["color.scheme"]]),c("color.scheme", "color.scheme.key")]
+  color.key <- setNames(color.key[["color.scheme"]], nm = color.key[["color.scheme.key"]])
+  meta_data <- meta_data[meta_data$barcodes %in% colnames(sce.temp), !colnames(meta_data) %in% c("color.scheme", "color.scheme.key")]
+  meta_data <- S4Vectors::DataFrame(meta_data, sizeFactor = SingleCellExperiment::colData(sce.temp)[["sizeFactor"]], row.names = meta_data$barcodes)
+  SummarizedExperiment::colData(sce.temp) <- meta_data
+  SummarizedExperiment::metadata(sce.temp) <- list(color.key = color.key)
+  sce.temp[ ,!is.na(SingleCellExperiment::colData(sce.temp)[["fig1_tSpace1"]])]
 }
 

@@ -14,7 +14,11 @@ Imports:
 	batchelor,
 	Seurat,
         rgl,
-	htmlwidgets
+	htmlwidgets,
+	viridis,
+	scater,
+	SummarizedExperiment,
+	S4Vectors
 Suggests:
 	scran,
 	ggplot2,

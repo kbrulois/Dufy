@@ -2,7 +2,7 @@
 % Please edit documentation in R/3d_htmlPlot.R
 \name{html_3dPlot}
 \alias{html_3dPlot}
-\title{Generate 3D scatterplot html widgets with color changer}
+\title{Generate a 3D scatter plot html widget with color changer}
 \usage{
 html_3dPlot(
   coordinates = NULL,
@@ -17,45 +17,48 @@ html_3dPlot(
   wrap = NULL,
   include_all_var = TRUE,
   save_widget = TRUE,
-  capture_2D = TRUE,
-  out_dir = ".",
-  file_name = "plot"
+  capture_2D = FALSE,
+  out_dir = getwd(),
+  file_name = "plot",
+  selfcontained = FALSE
 )
 }
 \arguments{
-\item{coordinates}{A m x 3 matrix of numeric xyz coordinates}
+\item{coordinates}{A m x 3 matrix of numeric xyz coordinates.}
 
 \item{color}{A m x n data.frame of data to plot as color. Categorical data (factors and character vectors) will be mapped to a discrete color scheme. Numerical data will be mapped to a continuous color scale.}
 
-\item{discrete_colors_default}{A character vector of hexidecimal color codes to use as discrete colors.}
+\item{discrete_colors_default}{A character vector of hexidecimal color codes to use as discrete colors. Default: readRDS(system.file("data/jmp_discrete_colors.rds", package = "Dufy")).}
 
-\item{discrete_colors_custom}{Optional. A custom set of descrete color schemes specified as a list of named vectors of hexidecimal color codes. The list names must match a colname of color. The names attribute of each list element must coorespond to each unique element within the matched color column.}
+\item{discrete_colors_custom}{Optional. A custom set of discrete color schemes specified as a named list of named vectors of hexidecimal color codes. Only list elements whose name matches a column name of color will be used. The names attribute of each list element must correspond to each unique element within the matched color column. Default: NULL.}
 
-\item{continuous_color_scale}{A character vector of hexidecimal color codes to use as a continuous color scale.}
+\item{continuous_color_scale}{A character vector of hexidecimal color codes to use as a continuous color scale. Defalut: NULL.}
 
 \item{convert_integer_to_string}{Whether to convert integer columns of color to character. Default: TRUE}
 
-\item{texts}{Optional. A string cooresponding to a colname of color containing a categorical variable. If specified,}
+\item{texts}{Optional. A string corresponding to a column name of color containing a categorical variable. If specified,}
 
-\item{arrows}{Optional. A p x q data.frame containing arrow coordinates. The base of the arrows must be specified as xyz coodinates in columns 1:3. The tip of the arrows must be provided as xyz coordinates in column 4:6. Two additional optional columns can be included: .}
+\item{arrows}{Optional. A p x q data.frame containing arrow coordinates. The base of the arrows must be specified as xyz coodinates in columns 1:3. The tip of the arrows must be provided as xyz coordinates in column 4:6. Two additional optional columns can be included: one called "color" containing hexidecimal color codes for each arrow and one with the same name as wrap containing categorical data.}
 
-\item{wrap}{Optional. A string cooresponding to a colname of color containing a categorical variable.}
+\item{wrap}{Optional. A string corresponding to a column name of color (and optionally a column name of arrows) containing a categorical variable.}
 
-\item{include_all_var}{The number of nearest neighbors used to construct the knn graph}
+\item{include_all_var}{Whether to include an extra panel with all data points. Ignored if wrap is NULL.}
 
-\item{save_widget}{Whether to save a html widget. Default: TRUE}
+\item{save_widget}{Whether to save a html widget. Default: TRUE.}
 
-\item{capture_2D}{Whether to capture a 2D orthogonal projection of the current 3d view.}
+\item{capture_2D}{Whether to capture a 2D orthogonal projection of the current 3d view. Default: FALSE.}
 
-\item{out_dir}{Number of diffusion map components to compute.}
+\item{out_dir}{A character string specifying the directory where the plot should be saved. Default: current working directory.}
 
-\item{file_name}{A character string passed to the "command" arugment of the system2 function in order to invoke python. Usually "/usr/local/bin/python3" on a Mac.}
+\item{file_name}{A character string specifying the file name basename. The ".html" file extension will be appended to file_name automatically.}
+
+\item{selfcontained}{Whether to save the plot as a self contained html file. See htmlwidgets::saveWidget. Default: FALSE.}
 }
 \value{
-A \code{matrix} containing a 2D orthagonal projection of the current view of the data.
+html_3dPlot is called for the side effect of saving an html file. If capture_2D is TRUE, a \code{matrix} containing a 2D orthogonal projection of the current view of the data is invisibly returned.
 }
 \description{
-This function generates an interactive 3d scatterplot. Includes a color changer and
+This function generates an interactive 3d scatter plot. Includes a color changer and
 multi-panel wrapping.
 }
 \author{

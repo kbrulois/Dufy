@@ -1,24 +1,25 @@
 
-#' Generate 3D scatterplot html widgets with color changer
+#' Generate a 3D scatter plot html widget with color changer
 #' 
-#' This function generates an interactive 3d scatterplot. Includes a color changer and
+#' This function generates an interactive 3d scatter plot. Includes a color changer and
 #' multi-panel wrapping. 
 #' 
-#' @param coordinates A m x 3 matrix of numeric xyz coordinates
+#' @param coordinates A m x 3 matrix of numeric xyz coordinates.
 #' @param color A m x n data.frame of data to plot as color. Categorical data (factors and character vectors) will be mapped to a discrete color scheme. Numerical data will be mapped to a continuous color scale.
-#' @param discrete_colors_default A character vector of hexidecimal color codes to use as discrete colors. 
-#' @param discrete_colors_custom Optional. A custom set of descrete color schemes specified as a list of named vectors of hexidecimal color codes. The list names must match a colname of color. The names attribute of each list element must coorespond to each unique element within the matched color column.
-#' @param continuous_color_scale A character vector of hexidecimal color codes to use as a continuous color scale. 
+#' @param discrete_colors_default A character vector of hexidecimal color codes to use as discrete colors. Default: readRDS(system.file("data/jmp_discrete_colors.rds", package = "Dufy")).
+#' @param discrete_colors_custom Optional. A custom set of discrete color schemes specified as a named list of named vectors of hexidecimal color codes. Only list elements whose name matches a column name of color will be used. The names attribute of each list element must correspond to each unique element within the matched color column. Default: NULL.
+#' @param continuous_color_scale A character vector of hexidecimal color codes to use as a continuous color scale. Defalut: NULL.
 #' @param convert_integer_to_string Whether to convert integer columns of color to character. Default: TRUE
-#' @param texts Optional. A string cooresponding to a colname of color containing a categorical variable. If specified,  
-#' @param arrows Optional. A p x q data.frame containing arrow coordinates. The base of the arrows must be specified as xyz coodinates in columns 1:3. The tip of the arrows must be provided as xyz coordinates in column 4:6. Two additional optional columns can be included: . 
-#' @param wrap Optional. A string cooresponding to a colname of color containing a categorical variable.
-#' @param include_all_var The number of nearest neighbors used to construct the knn graph
-#' @param save_widget Whether to save a html widget. Default: TRUE
-#' @param capture_2D Whether to capture a 2D orthogonal projection of the current 3d view.
-#' @param out_dir Number of diffusion map components to compute.
-#' @param file_name A character string passed to the "command" arugment of the system2 function in order to invoke python. Usually "/usr/local/bin/python3" on a Mac.
-#' @return A \code{matrix} containing a 2D orthagonal projection of the current view of the data.
+#' @param texts Optional. A string corresponding to a column name of color containing a categorical variable. If specified,  
+#' @param arrows Optional. A p x q data.frame containing arrow coordinates. The base of the arrows must be specified as xyz coodinates in columns 1:3. The tip of the arrows must be provided as xyz coordinates in column 4:6. Two additional optional columns can be included: one called "color" containing hexidecimal color codes for each arrow and one with the same name as wrap containing categorical data. 
+#' @param wrap Optional. A string corresponding to a column name of color (and optionally a column name of arrows) containing a categorical variable.
+#' @param include_all_var Whether to include an extra panel with all data points. Ignored if wrap is NULL.
+#' @param save_widget Whether to save a html widget. Default: TRUE.
+#' @param capture_2D Whether to capture a 2D orthogonal projection of the current 3d view. Default: FALSE.
+#' @param out_dir A character string specifying the directory where the plot should be saved. Default: current working directory.
+#' @param file_name A character string specifying the file name basename. The ".html" file extension will be appended to file_name automatically.
+#' @param selfcontained Whether to save the plot as a self contained html file. See htmlwidgets::saveWidget. Default: FALSE.
+#' @return html_3dPlot is called for the side effect of saving an html file. If capture_2D is TRUE, a \code{matrix} containing a 2D orthogonal projection of the current view of the data is invisibly returned.
 #'
 #' @author Kevin Brulois
 #' @export
@@ -37,9 +38,10 @@ html_3dPlot <- function(coordinates = NULL,
                         wrap = NULL,
                         include_all_var = TRUE,
                         save_widget = TRUE,
-                        capture_2D = TRUE,
-                        out_dir = ".",
-                        file_name = "plot") {
+                        capture_2D = FALSE,
+                        out_dir = getwd(),
+                        file_name = "plot",
+                        selfcontained = FALSE) {
   
   color <- as.data.frame(color)
   if(convert_integer_to_string) {
@@ -310,8 +312,19 @@ html_3dPlot <- function(coordinates = NULL,
     colsize = c(1,2,1,2)
     )
   )
-  
-  htmlwidgets::saveWidget(widget, file = normalizePath(paste0(out_dir, "/", file_name, ".html")), title = file_name)
+  if(selfcontained) {
+  message("coverting to selfcontained html")
+  }
+  data_size <- dim(color)
+  data_size <- data_size[1]*data_size[2]
+  if(data_size > 500000) {
+    message("warning: this is a large dataset. Converting to a self-contained html file will take a while... Consider setting selfcontained to FALSE.")
+  }
+  htmlwidgets::saveWidget(widget, 
+                          file = path.expand(paste0(out_dir, "/", file_name, ".html")), 
+                          libdir = path.expand(paste0(out_dir, "/", paste0(file_name, "_files"))), 
+                          title = file_name,
+                          selfcontained = selfcontained)
   
   }
   
