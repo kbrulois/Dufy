@@ -196,8 +196,11 @@ html_3dPlot <- function(coordinates = NULL,
     # dists <- do.call(c, lapply(1:nrow(arrows), function(x) {sqrt((arrows[x,1] - arrows[x,4])^2 +
     #                                                               (arrows[x,2] - arrows[x,5])^2 +
     #                                                               (arrows[x,3] - arrows[x,6])^2)}))
-    if(!is.null(arrows[[wrap]]) & x != "All") {
+    
+    if(!is.null(wrap) & x != "All") {
+      if(!is.null(arrows[[wrap]])) {
     arrows_sub <- arrows[arrows[[wrap]] == x, ]
+      }
     } else {
       arrows_sub <- arrows
     }

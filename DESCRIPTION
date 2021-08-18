@@ -18,9 +18,9 @@ Imports:
 	viridis,
 	scater,
 	SummarizedExperiment,
-	S4Vectors
+	S4Vectors,
+	scran
 Suggests:
-	scran,
 	ggplot2,
 	monocle3
 Depends: R (>= 3.3.0)
