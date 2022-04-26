@@ -1,0 +1,11 @@
+name: Publish Document
+title:
+username:
+account: rpubs
+server: rpubs.com
+hostUrl: rpubs.com
+appId: https://api.rpubs.com/api/v1/document/894919/e9f1a11e4485448495194b8d0cf19806
+bundleId: https://api.rpubs.com/api/v1/document/894919/e9f1a11e4485448495194b8d0cf19806
+url: http://rpubs.com/kbrulois/894919
+when: 1651011880.87284
+lastSyncTime: 1651011880.87286
