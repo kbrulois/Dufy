@@ -1,29 +1,36 @@
 Package: Dufy
 Type: Package
-Title: Various analysis and visualization tools for scRNAseq data
-Version: 0.1.0
+Title: A set of tools and algorithms for reducing the size of large datasets in a density-aware manner
+Version: 1.0.1
 Authors@R: c(person("Kevin", "Brulois", role = c("aut", "cre"), 
         email = "kevin.brulois@gmail.com")) 
 Maintainer: Kevin Brulois <kevin.brulois@gmail.com>
-Description: Various analysis and visualization tools for scRNAseq data
+Description: A set of tools and algorithms to reduce the size of large datasets. 
 License: GPL (>= 2)
 Imports:
 	assertthat,
 	gtools,
-	SingleCellExperiment,
-	batchelor,
+	data.table,
+	Matrix,
 	Seurat,
-        rgl,
+	rgl,
 	htmlwidgets,
 	viridis,
-	scater,
-	SummarizedExperiment,
-	S4Vectors,
-	scran
+	phateR
 Suggests:
+	scran,
+	scater,
+	batchelor,
 	ggplot2,
-	monocle3
-Depends: R (>= 3.3.0)
+	monocle3,
+	SingleCellExperiment,
+	zellkonverter
+Remotes:
+	nolanlab/Rclusterpp,
+	nolanlab/spade,
+	kbrulois/Dufy,
+	kbrulois/magicBatch
+Depends: R (>= 4.1.0)
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2

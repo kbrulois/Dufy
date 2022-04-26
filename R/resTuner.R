@@ -20,11 +20,11 @@ resTuner <- function(input_data,
                      cluster_repeats = 5, 
                      seed_resolution = 0.005, 
                      max_iter = 10,
-                     cluster_function = seurat_cluster_wrapper,
+                     cluster_function = Dufy::seurat_cluster_wrapper,
                      label_prefix = "seurat_",
                      ...) {
   
-  assertthat::assert_that(sum(names(formals(cluster_function)) %in% c("input_data", "resolution", "k")) == 3)
+  assertthat::assert_that(sum(names(formals(cluster_function)) %in% c("input_data", ".resolution", "k")) == 3)
   
   x <- 1
   y <- 1
@@ -36,7 +36,7 @@ resTuner <- function(input_data,
     
     message("\nclustering round ", x, " iteration ", y, "\ntrying resolution ", round(resolution, 5))
     
-    clusters <- cluster_function(input_data = input_data, resolution = resolution, ...)
+    clusters <- cluster_function(input_data = input_data, .resolution = resolution, ...)
     
     clust_num <- length(unique(as.character(clusters)))
     
@@ -115,10 +115,10 @@ igraph::membership(monocle3:::leiden_clustering(input_data,
 #' @author Kevin Brulois
 #' @export
 
-seurat_cluster_wrapper <- function(input_data, resolution, k, ...) {
+seurat_cluster_wrapper <- function(input_data, .resolution = 0.05, k = 5, ...) {
   
   nn <- Seurat::FindNeighbors(input_data, k.param = k)
-  Seurat::FindClusters(nn[["snn"]], resolution = resolution, ...)[,1]
+  Seurat::FindClusters(nn[["snn"]], resolution = .resolution, ...)[,1]
   
 }
 

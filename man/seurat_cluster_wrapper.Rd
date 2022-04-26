@@ -4,16 +4,16 @@
 \alias{seurat_cluster_wrapper}
 \title{A resTuner-compatible wrapper function for clustering using Seurat}
 \usage{
-seurat_cluster_wrapper(input_data, resolution, k, ...)
+seurat_cluster_wrapper(input_data, .resolution = 0.05, k = 5, ...)
 }
 \arguments{
 \item{input_data}{A matrix where features correspond to rows and cells correspond to columns.}
 
-\item{resolution}{Either a positive integer specifying the exact number of clusters desired or a vector of length two specifying range.}
-
 \item{k}{The number of rounds of clusterings to perform. Default: 5.}
 
 \item{...}{Arguments passed to Seurat::FindClusters}
+
+\item{resolution}{Either a positive integer specifying the exact number of clusters desired or a vector of length two specifying range.}
 }
 \value{
 A vector of length \code{ncol(input_data)} containing cluster assignments.

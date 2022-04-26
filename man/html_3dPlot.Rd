@@ -14,6 +14,7 @@ html_3dPlot(
   convert_integer_to_string = TRUE,
   texts = NULL,
   arrows = NULL,
+  rad = "auto",
   wrap = NULL,
   include_all_var = TRUE,
   save_widget = TRUE,
@@ -39,6 +40,8 @@ html_3dPlot(
 \item{texts}{Optional. A string corresponding to a column name of color containing a categorical variable. If specified,}
 
 \item{arrows}{Optional. A p x q data.frame containing arrow coordinates. The base of the arrows must be specified as xyz coodinates in columns 1:3. The tip of the arrows must be provided as xyz coordinates in column 4:6. Two additional optional columns can be included: one called "color" containing hexidecimal color codes for each arrow and one with the same name as wrap containing categorical data.}
+
+\item{rad}{If arrows is not NULL, rad determines the radius of the arrow base. If set to 'auto' (default), arrow radius will be determined automatically.}
 
 \item{wrap}{Optional. A string corresponding to a column name of color (and optionally a column name of arrows) containing a categorical variable.}
 

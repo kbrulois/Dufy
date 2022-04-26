@@ -12,6 +12,7 @@
 #' @param convert_integer_to_string Whether to convert integer columns of color to character. Default: TRUE
 #' @param texts Optional. A string corresponding to a column name of color containing a categorical variable. If specified,  
 #' @param arrows Optional. A p x q data.frame containing arrow coordinates. The base of the arrows must be specified as xyz coodinates in columns 1:3. The tip of the arrows must be provided as xyz coordinates in column 4:6. Two additional optional columns can be included: one called "color" containing hexidecimal color codes for each arrow and one with the same name as wrap containing categorical data. 
+#' @param rad If arrows is not NULL, rad determines the radius of the arrow base. If set to 'auto' (default), arrow radius will be determined automatically.
 #' @param wrap Optional. A string corresponding to a column name of color (and optionally a column name of arrows) containing a categorical variable.
 #' @param include_all_var Whether to include an extra panel with all data points. Ignored if wrap is NULL.
 #' @param save_widget Whether to save a html widget. Default: TRUE.
@@ -35,6 +36,7 @@ html_3dPlot <- function(coordinates = NULL,
                         convert_integer_to_string = TRUE,
                         texts = NULL,
                         arrows = NULL,
+                        rad = 'auto',
                         wrap = NULL,
                         include_all_var = TRUE,
                         save_widget = TRUE,
@@ -196,7 +198,11 @@ html_3dPlot <- function(coordinates = NULL,
     # dists <- do.call(c, lapply(1:nrow(arrows), function(x) {sqrt((arrows[x,1] - arrows[x,4])^2 +
     #                                                               (arrows[x,2] - arrows[x,5])^2 +
     #                                                               (arrows[x,3] - arrows[x,6])^2)}))
-    
+    if(rad == 'auto') {
+      euc_dist <- function(x1, x2) sqrt(sum((x1 - x2) ^ 2)) 
+      span <- euc_dist(apply(coordinates, 2, min), apply(coordinates, 2, max))
+      rad <- span / 200
+    }
     if(!is.null(wrap) & x != "All") {
       if(!is.null(arrows[[wrap]])) {
     arrows_sub <- arrows[arrows[[wrap]] == x, ]
@@ -204,8 +210,21 @@ html_3dPlot <- function(coordinates = NULL,
     } else {
       arrows_sub <- arrows
     }
+    if(!is.null(arrows_sub[["color"]])) {
+      
+      col_num <- length(unique(arrows_sub[["color"]]))
+      while(length(discrete_colors_default) < col_num) {
+        discrete_colors_default <- c(discrete_colors_default, 
+                                     discrete_colors_default)
+      }
+      
+      disc_colors <- discrete_colors_default[1:col_num]
+      cat_dat_names <- unique(arrows_sub[["color"]])
+      names(disc_colors) <- cat_dat_names[gtools::mixedorder(cat_dat_names)]
+      arrows_sub[["color"]] <- disc_colors[arrows_sub[["color"]]]
+    }
     for(y in 1:nrow(arrows_sub)) {
-    cones[[paste0(x,"_", y)]] <- Dufy:::cone3d(base = unname(unlist(arrows_sub[y,1:3])), tip = unname(unlist(arrows_sub[y,4:6])), rad = 0.2,
+    cones[[paste0(x,"_", y)]] <- Dufy:::cone3d(base = unname(unlist(arrows_sub[y,1:3])), tip = unname(unlist(arrows_sub[y,4:6])), rad = rad,
                  color = if(is.null(arrows_sub[["color"]])) {"red"} else {arrows_sub[["color"]][y]})
     
     }

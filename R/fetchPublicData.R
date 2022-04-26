@@ -83,8 +83,6 @@ extractButcherBEC <- function(local.dir = tempdir()) {
   
   dat.comb <- scater::logNormCounts(dat.comb)
   
-  SingleCellExperiment::counts(dat.comb) <- NULL
-  
   meta_data <- S4Vectors::DataFrame(data.table::fread(paste0(local.dir, "/GSE140348_cell_meta_data.csv.gz")))
   unlink(local.dir, recursive = TRUE)
   meta_data <- S4Vectors::DataFrame(meta_data, sizeFactor = SingleCellExperiment::colData(dat.comb)[["sizeFactor"]], row.names = meta_data$barcodes)

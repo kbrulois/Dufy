@@ -10,7 +10,7 @@ resTuner(
   cluster_repeats = 5,
   seed_resolution = 0.005,
   max_iter = 10,
-  cluster_function = seurat_cluster_wrapper,
+  cluster_function = Dufy::seurat_cluster_wrapper,
   label_prefix = "seurat_",
   ...
 )
